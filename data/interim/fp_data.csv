@@ -1,0 +1,27 @@
+"survey_duration","gender","age","education","tweet_submit_time","math_q1","math_q2","test_submit_time","stimulus","georgians","energy","soccer","fauci","pollution","election","truth","sentiment","bin_stimulus","bin_georgians","bin_energy","bin_soccer","bin_fauci","bin_pollution","bin_election","total_correct"
+"151","Male","35 - 54 yrs old","College Graduate",40,"4","7.1",43,"Green House Gases","Do not recall","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,0,1,1,1,1,1,6
+"182","Female","25 - 34 yrs old","College Graduate",75,"4","7.1",57,"Green House Gases","None of the above","Wind","Excercise","None of the above","1st largest","2024","fake","positive",1,0,1,0,1,1,1,5
+"245","Female","55 +","College Graduate",71,"4","7.1",86,"Green House Gases","70","Wind","Pfizer vaccine","National Geographic Society","1st largest","2024","fake","positive",1,1,1,1,0,1,1,6
+"7458","Male","35 - 54 yrs old","College Graduate",53,"4",".71",59,"Green House Gases","75","Do not recall","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,0,0,1,1,1,1,5
+"316","Male","35 - 54 yrs old","College Graduate",109,"4","7.1",118,"Green House Gases","75","Wind","Unknown","None of the above","1st largest","2024","fake","positive",1,0,1,0,1,1,1,5
+"193","Female","35 - 54 yrs old","College Graduate",48,"4","7.1",64,"Green House Gases","70","Coal","Pfizer vaccine","Do not recall","Do not recall","2024","fake","positive",1,1,0,1,0,0,1,4
+"313","Male","55 +","College Graduate",134,"4","7.1",75,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","None of the above","fake","positive",1,1,1,1,1,1,0,6
+"161","Male","25 - 34 yrs old","College Graduate",41,"4","7.1",57,"Green House Gases","75","Wind","Pfizer vaccine","Do not recall","Do not recall","Do not recall","fake","positive",1,0,1,1,0,0,0,3
+"405","Male","55 +","College Graduate",164,"4",".71",106,"Green House Gases","75","Wind","Pfizer vaccine","National Geographic Society","1st largest","2024","fake","positive",1,0,1,1,0,1,1,5
+"262","Female","35 - 54 yrs old","College Graduate",68,"4","7.1",135,"Green House Gases","70","None of the above","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,0,1,1,1,1,6
+"182","Male","25 - 34 yrs old","College Graduate",38,"4","7.1",92,"Green House Gases","70","Do not recall","Unknown","None of the above","1st largest","2024","fake","positive",1,1,0,0,1,1,1,5
+"362","Male","55 +","College Graduate",66,"4","7.1",61,"Green House Gases","70","Do not recall","Do not recall","None of the above","Do not recall","Do not recall","fake","positive",1,1,0,0,1,0,0,3
+"166","Male","25 - 34 yrs old","College Graduate",45,"4","7.1",51,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,1,1,1,1,1,7
+"326","Female","35 - 54 yrs old","College Graduate",76,"4","7.1",75,"Green House Gases","None of the above","None of the above","Pfizer vaccine","National Geographic Society","1st largest","2024","fake","positive",1,0,0,1,0,1,1,4
+"24199","Female","25 - 34 yrs old","College Graduate",63,"4","7.1",108,"Green House Gases","Do not recall","Do not recall","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,0,0,1,1,1,1,5
+"201","Female","18 - 24 yrs old","Some College",105,"4","7.1",45,"Green House Gases","65","Do not recall","Pfizer vaccine","None of the above","None of the above","Do not recall","fake","positive",1,0,0,1,1,0,0,3
+"184","Male","18 - 24 yrs old","College Graduate",85,"4","7.1",49,"Green House Gases","Do not recall","Coal","Pfizer vaccine","American Red Cross","Do not recall","2024","fake","positive",1,0,0,1,0,0,1,3
+"217","Female","55 +","College Graduate",44,"4","7.1",84,"Green House Gases","70","Do not recall","Pfizer vaccine","None of the above","Do not recall","Do not recall","fake","positive",1,1,0,1,1,0,0,4
+"201","Female","25 - 34 yrs old","College Graduate",82,"4","7.1",47,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,1,1,1,1,1,7
+"816","Female","55 +","College Graduate",158,"4",".71",215,"Green House Gases","70","Wind","Pfizer vaccine","National Geographic Society","1st largest","2024","fake","positive",1,1,1,1,0,1,1,6
+"149","Male","25 - 34 yrs old","College Graduate",44,"4","7.1",59,"Green House Gases","70","Wind","Pfizer vaccine","National Geographic Society","1st largest","2024","fake","positive",1,1,1,1,0,1,1,6
+"217","Male","35 - 54 yrs old","College Graduate",43,"4","7.1",67,"Green House Gases","75","Wind","Pfizer vaccine","Do not recall","1st largest","2024","fake","positive",1,0,1,1,0,1,1,5
+"180","Male","25 - 34 yrs old","College Graduate",69,"4","7.1",64,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,1,1,1,1,1,7
+"260","Female","55 +","College Graduate",70,"4","7.1",94,"Green House Gases","Do not recall","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,0,1,1,1,1,1,6
+"187","Female","35 - 54 yrs old","College Graduate",63,"4","7.1",69,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,1,1,1,1,1,7
+"216","Male","35 - 54 yrs old","College Graduate",62,"4","7.1",82,"Green House Gases","70","Wind","Pfizer vaccine","None of the above","1st largest","2024","fake","positive",1,1,1,1,1,1,1,7

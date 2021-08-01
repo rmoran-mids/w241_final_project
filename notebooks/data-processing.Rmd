@@ -1,0 +1,260 @@
+---
+title: "w41_tweets_facts_sentiment_FN"
+author: "Arriaga, Hue, Khural, Moran"
+date: "July 31, 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(data.table)
+library(foreign)
+library(tidyverse)
+library(dplyr)
+library(readr)
+
+
+# Set working directory
+setwd("C:/Users/Zaptetra/Google Drive/MIDS/W241/w241_final_project/notebooks")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The raw data
+
+First we will load the data.
+
+```{r load data}
+# d<- data.table::fread('../data/raw/response_tp_07_31.csv')
+# d<- data.table::fread('../data/raw/response_tn_07_31.csv')
+# d<- data.table::fread('../data/raw/response_fp_07_31.csv')
+d<- data.table::fread('../data/raw/response_fn_07_31.csv')
+
+
+```
+
+## Data cleaning
+
+We will first review:
+
+- Eliminate empty columns
+- Rename columns
+- Update fields that didn't export correctly (missing data)
+- Check for attrition or duplicates
+- Check for fake answers: response time too quick plus attention check question wrong.
+- Convert data to correct type (all are strings)
+
+```{r pressure, echo=FALSE}
+
+# delete unwanted rows
+unwanted_rows <- c(1,2)
+
+# # Drop blank columns
+drop_columns <- c("RecipientLastName",
+                   "RecipientFirstName",
+                   "RecipientEmail",
+                   "ExternalReference", "Progress", "Status",
+                   "LocationLatitude",
+                   "LocationLongitude","DistributionChannel",
+                   "UserLanguage","IPAddress")
+
+drop_col_index <- which(colnames(d) %in% drop_columns)
+
+d<- d[-unwanted_rows, ]
+
+d[, drop_columns]<-list(NULL)
+
+col_new_names <- c("start_date", "end_date", "survey_duration",
+                   "finished", "finished_date", "id", "email",
+                   "gender", "age", "education",
+                   "tweet_first_click_time", "tweet_last_click_time", "tweet_submit_time", "tweet_click_count",
+                   "math_q1", "math_q2",
+                   "test_first_click_time", "test_last_click_time", "test_submit_time", "test_click_count",
+                   "stimulus","georgians","energy","soccer","fauci", "pollution","election")
+
+# Rename columns
+colnames(d) <- col_new_names
+
+# Check for missing data
+# Audit missing values
+####################
+# Survey id: R_3s64ZlPIAtROugC - missing soccer and fauci (response in qualtrics confirmed)
+# d[id=="R_3s64ZlPIAtROugC"]$soccer <- "None of the above"
+# d[id=="R_3s64ZlPIAtROugC"]$fauci <- "None of the above"
+
+# survey id: R_33vRD5yKc2c3FIk - missing energy (response confirmed)
+# d[id=="R_33vRD5yKc2c3FIk"]$energy <- "None of the above"
+
+# # survey id: R_3j7jocPTJApWZXu - missing fauci
+# d[id=="R_3j7jocPTJApWZXu"]$fauci <- "None of the above"
+
+# survey id: R_2zoqcnPiyzpmJga - missing fauci
+# d[id=="R_2zoqcnPiyzpmJga"]$fauci <- "None of the above"
+
+# survey id: R_1I76YKkC3bSzfJv - missing fauci
+# d[id=="R_1I76YKkC3bSzfJv"]$pollution <- "None of the above"
+# d[id=="R_1I76YKkC3bSzfJv"]$georgians <- "None of the above"
+
+# survey id: R_2asjDNe8PAuhxxh - missing fauci
+# d[id=="R_2asjDNe8PAuhxxh"]$georgians <- "None of the above"
+
+# survey id: R_d4o2OrwcVxrjEn7 - missing fauci
+# d[id=="R_d4o2OrwcVxrjEn7"]$soccer <- "None of the above"
+
+# survey id: R_8c7WtV8AzXTDACl - missing fauci
+# d[id=="R_8c7WtV8AzXTDACl"]$soccer <- "None of the above"
+####################
+# After reviewing all the missing data, it seems that the option "None of the above" wasn't registered in any of the option
+
+d[georgians=="" & finished=="True"]$georgians <- "None of the above"
+d[energy=="" & finished=="True"]$energy <- "None of the above"
+d[soccer=="" & finished=="True"]$soccer <- "None of the above"
+d[fauci=="" & finished=="True"]$fauci <- "None of the above"
+d[pollution=="" & finished=="True"]$pollution <- "None of the above"
+d[election=="" & finished=="True"]$election <- "None of the above"
+
+#duplicate rows
+## ONLY FOR TN
+## Respondent id-R_2dWlnlkYnG9epqt is a non-complier
+# non_compliers_tn<-c("R_0IJ2yZ90ItKq2Fb")
+# d<-d[!(id %in% non_compliers_tn),]
+
+## ONLY FOR FP and FN
+non_compliers_fp<-0
+paste("We found",non_compliers_fp," non-compliers")
+
+
+
+## Check for attrition
+# People who received the treatment and then stopped
+attrition_count <- length(d[finished=="False" & tweet_submit_time!=""]$id)
+
+# People who received the treatment
+total_responses <- length(d[tweet_submit_time!=""]$id)
+
+attrition_proportion=attrition_count/total_responses
+paste("We found a ", round(attrition_proportion*100, digits = 2),"% attrition.")
+
+# Remove respondents that dropped (attrition + drop out)
+respondent_drop <- which(d[,finished=="False"])
+d <- d[-respondent_drop,]
+
+# Save emails of raffle respondents
+# write.csv(d$email,"../data/interim/tp_emails.csv", row.names = FALSE)
+# write.csv(d$email,"../data/interim/tn_emails.csv", row.names = FALSE)
+# write.csv(d$email,"../data/interim/fp_emails.csv", row.names = FALSE)
+write.csv(d$email,"../data/interim/fn_emails.csv", row.names = FALSE)
+
+# Data type conversion
+d$start_date <- as.Date(d$start_date, format = "%Y-%m-%d %H:%M:%s")
+d$end_date <- as.Date(d$end_date, format = "%Y-%m-%d %H:%M:%s")
+# d$tweet_submit_time <- as.integer(d$tweet_submit_time)
+# d$test_submit_time <- as.integer(d$test_submit_time)
+
+```
+
+We can also see a histogram of time looking at the tweets and time responding the test.
+
+```{r}
+par(mfrow=c(1,2))
+
+h1 <- hist(d$tweet_submit_time,
+     main = "Time reading Tweets",
+     xlab = "seconds", 
+     breaks = length(d$tweet_submit_time)/5)
+
+h2<- hist(d$test_submit_time,
+     main = "Time responding the test",
+     xlab = "seconds", 
+     breaks = length(d$test_submit_time)/5)
+
+
+```
+
+Data seems reasonably normal. Now let's remove variable that are not of interest.
+
+```{r}
+# Keep only columns of interest
+colnames(d)
+cols_to_remove <- c("start_date","end_date",
+                    "finished","finished_date","id","email",
+                    "tweet_first_click_time","tweet_last_click_time","tweet_click_count",
+                    "test_first_click_time","test_last_click_time","test_click_count")
+
+cols_to_drop_ix<-which(colnames(d) %in% cols_to_remove)
+
+d[,cols_to_drop_ix]<- list(NULL)
+```
+
+Let's include the treatment columns to the data.
+
+```{r}
+## IMPORTANT Adding factors
+# d$truth<- as.factor("fact")
+d$truth<- as.factor("fake")
+# d$sentiment<- as.factor("positive")
+d$sentiment<- as.factor("negative")
+
+# Correct answers for test: FACT
+# d[ , bin_stimulus := ifelse(stimulus == "Green House Gases", yes = 1, no = 0)]
+# d[ , bin_georgians := ifelse(georgians == "None of the above", yes = 1, no = 0)]
+# d[ , bin_energy := ifelse(energy == "Natural Gas", yes = 1, no = 0)]
+# d[ , bin_soccer := ifelse(soccer == "Unknown", yes = 1, no = 0)]
+# d[ , bin_fauci := ifelse(fauci == "National Geographic Society", yes = 1, no = 0)]
+# d[ , bin_pollution := ifelse(pollution == "6th largest", yes = 1, no = 0)]
+# d[ , bin_election := ifelse(election == "2024", yes = 1, no = 0)]
+
+
+# # Correct answers for test: FAKE
+d[ , bin_stimulus := ifelse(stimulus == "Green House Gases", yes = 1, no = 0)]
+d[ , bin_georgians := ifelse(georgians == "70", yes = 1, no = 0)]
+d[ , bin_energy := ifelse(energy == "Wind", yes = 1, no = 0)]
+d[ , bin_soccer := ifelse(soccer == "Pfizer vaccine", yes = 1, no = 0)]
+d[ , bin_fauci := ifelse(fauci == "None of the above", yes = 1, no = 0)]
+d[ , bin_pollution := ifelse(pollution == "1st largest", yes = 1, no = 0)]
+d[ , bin_election := ifelse(election == "2024", yes = 1, no = 0)]
+
+d$total_correct <- d%>% select(c("bin_stimulus", "bin_georgians","bin_energy","bin_soccer","bin_fauci","bin_pollution", "bin_election")) %>% rowSums()
+```
+
+We can see the distribution of correct answers.
+
+```{r}
+h3 <- hist(d$total_correct,
+     main = "Correct answers distribution (max 7)",
+     xlab = "correct answers", 
+     breaks = length(d$total_correct)/4)
+```
+
+Now we can save the file for future reference and stacking.
+
+```{r}
+# Save to CSV
+# write.csv(d,"../data/interim/tp_data.csv", row.names = FALSE)
+# write.csv(d,"../data/interim/tn_data.csv", row.names = FALSE)
+# write.csv(d,"../data/interim/fp_data.csv", row.names = FALSE)
+write.csv(d,"../data/interim/fn_data.csv", row.names = FALSE)
+```
+
+Finally, we can stack all of the individual files.
+
+```{r}
+files <- c("tp_data.csv","tn_data.csv","fp_data.csv","fn_data.csv")
+
+df_fn<-data.table::fread("../data/interim/fn_data.csv")
+df_fp<-data.table::fread("../data/interim/fp_data.csv")
+df_tn<-data.table::fread("../data/interim/tn_data.csv")
+df_tp<-data.table::fread("../data/interim/tp_data.csv")
+
+df<-rbind(df_tp,df_tn,df_fp,df_fn)
+
+write.csv(df,"../data/processed/tweets_data.csv", row.names = FALSE)
+
+```
+
+Let's confirm data was saved properly
+
+```{r}
+df<-data.table::fread("../data/processed/tweets_data.csv")
+df$truth_f <- as.factor(df$truth)
+df$sentiment_f <- as.factor(df$sentiment)
+```
+
