@@ -1,5 +1,7 @@
-# RAOP_classifier_arriaga_mahajan
-This classifier predicts if a requester on reddit "Random Acts of Pizza" will get a pizza or not.
+# Can tweets become the new folktale?
+This project was created by Carolina Arriaga, Alice Hua, Manpreet Khural and Randy Moran.
+
+Objective: Understand if people's memory is affected after exposed to a controlled tweet post with factors: truth (Fact/Fake) and sentiment (Positive/Negative).
 
 Project Organization
 ------------
