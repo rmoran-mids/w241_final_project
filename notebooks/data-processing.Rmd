@@ -11,10 +11,11 @@ library(foreign)
 library(tidyverse)
 library(dplyr)
 library(readr)
+library(stargazer)                      # for printing tables 
 
 
 # Set working directory
-setwd("C:/Users/Zaptetra/Google Drive/MIDS/W241/w241_final_project/notebooks")
+# setwd("C:/Users/Zaptetra/Google Drive/MIDS/W241/w241_final_project/notebooks")
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -169,6 +170,7 @@ h2<- hist(d$test_submit_time,
 
 ```
 
+
 Data seems reasonably normal. Now let's remove variable that are not of interest.
 
 ```{r}
@@ -250,11 +252,79 @@ write.csv(df,"../data/processed/tweets_data.csv", row.names = FALSE)
 
 ```
 
-Let's confirm data was saved properly
+START HERE: Let's confirm data was saved properly
 
 ```{r}
 df<-data.table::fread("../data/processed/tweets_data.csv")
 df$truth_f <- as.factor(df$truth)
 df$sentiment_f <- as.factor(df$sentiment)
+df$age_f <- as.factor(df$age)
+df$education_f <- as.factor(df$education)
+df$gender_f <- as.factor(df$gender)
+df[ truth == 'fact' & sentiment == 'positive', treatment_group := 1] 
+df[ truth == 'fact' & sentiment == 'negative', treatment_group := 2] 
+df[ truth == 'fake' & sentiment == 'positive', treatment_group := 3] 
+df[ truth == 'fake' & sentiment == 'negative', treatment_group := 4] 
+df$treatment_group_f <- as.factor(df$treatment_group)
+
+df_tp <- df[ truth == 'fact' & sentiment == 'positive', ]
+df_tn <- df[ truth == 'fact' & sentiment == 'negative', ]
+df_fp <- df[ truth == 'fake' & sentiment == 'positive', ]
+df_fn <- df[ truth == 'fake' & sentiment == 'negative', ]
+
 ```
 
+```{r}
+tail(df)
+```
+
+
+```{r}
+plot(df$age_f)
+plot(df$education_f)
+plot(df$gender_f)
+plot(as.factor(df$treatment_group))
+
+```
+```{r}
+# df[ , t.test(as.factor(df$treatment_group) ~ total_correct)]
+```
+
+```{r}
+# d[ ,  chisq.test(x3, treat)]
+```
+
+```{r}
+null_mod <- df[ , lm(total_correct ~ 1)]
+summary(null_mod)
+```
+
+```{r}
+full_mod <- df[ , lm(total_correct ~ 1 + truth_f + sentiment_f )]
+summary(full_mod)
+```
+
+
+```{r}
+m1 <- lm(total_correct ~ truth_f + sentiment_f, data = df)
+m1a <- lm(total_correct ~ truth_f * sentiment_f, data = df)
+m2 <- lm(total_correct ~ truth_f + sentiment_f + truth_f*sentiment_f, data = df)
+m3 <- lm(total_correct ~ sentiment_f, data = df)
+m4 <- lm(total_correct ~ truth_f, data = df)
+stargazer(m1,m2,m3, m4, 
+          type = "text" ) 
+```
+
+```{r}
+mv1 <- anova(m1, m1a, test = 'F')
+mv1
+```
+
+```{r}
+mv2 <- anova(m1, m2, test = 'F')
+mv2
+```
+```{r}
+mv2 <- anova(null_mod, full_mod, test = 'F')
+mv2
+```
